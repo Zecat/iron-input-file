@@ -43,7 +43,7 @@ Example:
     },
 
     properties: {
-      filesArray: {
+      bindFiles: {
         type: Array,
         value: [],
         notify: true
@@ -77,16 +77,16 @@ Example:
     },
 
     removeByIndex: function(fileIndex) {
-      this.splice('filesArray', fileIndex, 1);
+      this.splice('bindFiles', fileIndex, 1);
     },
 
     _onFilesChange: function() {
       // to factoorize
       if (this._addOnce) {
-        this.filesArray = this.filesArray.concat(this._toArray(this.files));
+        this.bindFiles = this.bindFiles.concat(this._toArray(this.files));
         this._addOnce = false;
       } else {
-        this.filesArray = this._toArray(this.files);
+        this.bindFiles = this._toArray(this.files);
       }
     },
 

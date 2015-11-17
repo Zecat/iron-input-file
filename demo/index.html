@@ -18,7 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body unresolved>
     <template is="dom-bind">
-      <input is="iron-input-file" id="inputFile" files-array="{{files}}" multiple>
+      <input is="iron-input-file" id="inputFile" bind-files="{{files}}" multiple>
       <button on-tap="change">Change files</button>
       <button on-tap="add">Add files</button>
       <button on-tap="removeFirst">remove first</button>
