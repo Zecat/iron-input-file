@@ -10,32 +10,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-An element providing a solution to no problem in particular.
+
+iron-input-file extends the native input element and 
+gives it an Api.
+
+This element provides a convenient way to use an hidden input type="file" without having to bind the 'click' event manually and gives you the opportunity to modify files array.
+
+To use it, just gives it an id and use the methods it provides. The element exposes the chosen files in the fileArray attribute.
+
+Don't directly bind to 'value' or 'files' attribute, for security reasons, browsers does not allow us to manipulate them as we please. To use it in a form, create a custom element wrapping iron-input-form and implementing IronFormElementBehavior, and use this custom element in an iron-form.
 
 Example:
 
-    <upload-photos-foretaste></upload-photos-foretaste>
+    <input is="iron-input-file">
 
 @group Seed Elements
-@element upload-photos-foretaste
+@element iron-input-file
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="iron-input-file">
-
-  <template>
-    <style>
-      :host {
-        display: block;
-        box-sizing: border-box;
-      }
-    </style>
-
-    <input type="hidden" value="{{files}}" on-tap="chooseFiles"></input>
-    
-  </template>
-
-</dom-module>
 
 <script>
 
@@ -43,13 +36,62 @@ Example:
 
     is: 'iron-input-file',
 
-    properties: {
-      files: Object,
+    extends: 'input',
 
+    hostAttributes: {
+      'type': 'file'
     },
 
-    chooseFiles: function() {
-      console.log(this.files);
+    properties: {
+      filesArray: {
+        type: Array,
+        value: [],
+        notify: true
+      },
+
+      _addOnce: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    created: function() {
+      this.style.display = 'none';
+    },
+
+    listeners: {
+      'change': '_onFilesChange'
+    },
+
+    add: function() {
+      this._addOnce = true;
+      this.change();
+    },
+
+    change: function() {
+     /* Reset the value because the change event isn't trigger 
+      * if selected item is equal to previous. Only checked on chrome.
+      */
+      this.value = null;
+      this.fire('click');
+    },
+
+    removeByIndex: function(fileIndex) {
+      this.splice('filesArray', fileIndex, 1);
+    },
+
+    _onFilesChange: function() {
+      // to factoorize
+      if (this._addOnce) {
+        this.filesArray = this.filesArray.concat(this._toArray(this.files));
+        this._addOnce = false;
+      } else {
+        this.filesArray = this._toArray(this.files);
+      }
+    },
+
+    _toArray: function(fileList) {
+      return Array.prototype.slice.call(fileList);
     }
 
   });

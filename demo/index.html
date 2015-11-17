@@ -17,8 +17,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="import" href="../iron-input-file.html">
   </head>
   <body unresolved>
-
-    <iron-input-file></iron-input-file>
-
+    <template is="dom-bind">
+      <input is="iron-input-file" id="inputFile" files-array="{{files}}" multiple>
+      <button on-tap="change">Change files</button>
+      <button on-tap="add">Add files</button>
+      <button on-tap="removeFirst">remove first</button>
+      <template is="dom-repeat" items="[[files]]">
+        <h1>[[item.name]]</h1>
+      </template>
+    </template>
+    <script>
+      var scope = document.querySelector('template[is=dom-bind]');
+      scope.change = () => scope.$.inputFile.change();
+      scope.add = () => scope.$.inputFile.add();
+      scope.removeFirst = () => scope.$.inputFile.removeByIndex(3);
+    </script>
   </body>
 </html>
